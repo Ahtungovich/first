@@ -1,10 +1,12 @@
 extends KinematicBody2D
 
 var speed = 15
-var jump_force = 100
+var jump_force = 400
 var gravity = 500
 
 var vel = Vector2()
+
+onready var player_sprite = get_node("Player")
 
 func _physics_process(delta):
 	if Input.is_action_pressed("player_left"):
@@ -14,10 +16,14 @@ func _physics_process(delta):
 	
 	vel.y += gravity*delta
 	
-	if Input.is_action_pressed("player_jump"):
+	if Input.is_action_pressed("player_jump") and is_on_floor():
 		vel.y -= jump_force
-	move_and_slide(vel, Vector2.UP)
-
+	
+	vel = move_and_slide(vel, Vector2.UP)
+	if vel.x < 0:
+		player_sprite.flip_h = true
+	if vel.x > 0:
+		player_sprite.flip_h = false
 
 
 
